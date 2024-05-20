@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miner Data Entry</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="shortcut icon" href="./ellle.jpg" type="image/x-icon">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="input-section">
+            <label for="code">CODE</label>
+            <input type="text" id="code">
+            <label for="name">Name of Miner</label>
+            <input type="text" id="name">
+            <label for="price">Price</label>
+            <input type="text" id="price">
+            <div class="pre-price-buttons">
+                <button class="pre-price" data-price="200">200</button>
+                <button class="pre-price" data-price="250">250</button>
+                <button class="pre-price" data-price="350">350</button>
+            </div>
+            <button id="enter">Enter</button>
+            <button id="update" style="display:none;">Update</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>
+                        Name of Miner
+                        <span id="sortName" class="sort-icon">&#9650;</span> <!-- Up Arrow -->
+                        <span id="unsortName" class="sort-icon" style="display:none;">&#9660;</span> <!-- Down Arrow -->
+                    </th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody id="minerTable"></tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2"><strong>Total</strong></td>
+                    <td id="totalPrice">₱ 0.00</td>
+                </tr>
+            </tfoot>
+        </table>
+        <button id="download">Download in Excel</button>
+        <button id="clearTable">Clear Table</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
