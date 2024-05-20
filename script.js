@@ -141,11 +141,46 @@ function updateTotalPrice() {
     }
 
     document.getElementById('totalPrice').textContent = `₱ ${total.toFixed(2)}`;
+
+    checkForMilestones(total);
+}
+
+function checkForMilestones(total) {
+    if (total >= 100000) { 
+        triggerConfetti(100000);
+    } 
+    else if (total >= 50000) {
+        triggerConfetti(50000);
+    }
+    else if (total >= 20000) {
+        triggerConfetti(20000);
+    }
+    else if (total >= 10000) {
+        triggerConfetti(10000);
+    } else if (total >= 5000) {
+        triggerConfetti(5000);
+    }
+}
+
+function triggerConfetti(milestone, total) {
+    confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+    });
+
+    const messageContainer = document.getElementById('confetti-message');
+    messageContainer.textContent = `Congratulations! You've reached a milestone: ₱ ${milestone.toFixed(2)}!`;
+    messageContainer.style.display = 'block';
+
+    setTimeout(() => {
+        messageContainer.style.display = 'none';
+    }, 3000); // Hide the message after 5 seconds
 }
 
 function downloadExcel() {
     const wb = XLSX.utils.book_new();
-    const ws_data = [['Code', 'Name of Miner', 'Price']];
+    const ws_data = [['Code', 'Name', 'Price']];
     const table = document.getElementById('minerTable');
     
     for (let i = 0, row; row = table.rows[i]; i++) {
@@ -155,65 +190,59 @@ function downloadExcel() {
         ws_data.push([code, name, price]);
     }
 
-    const totalPrice = document.getElementById('totalPrice').textContent;
-    ws_data.push(['', 'Total', totalPrice]);
-
     const ws = XLSX.utils.aoa_to_sheet(ws_data);
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-    const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-    const today = new Date();
-    const dayName = daysOfWeek[today.getDay()];
-
-    const fileName = `${dayName}_live_houseOfElle.xlsx`;
-    XLSX.writeFile(wb, fileName);
-}
-
-function getTableContent() {
-    const table = document.getElementById('minerTable');
-    const rows = Array.from(table.rows);
-    return rows.map(row => ({
-        code: row.cells[0].textContent,
-        name: row.cells[1].textContent,
-        price: row.cells[2].textContent
-    }));
-}
-
-function setTableContent(content) {
-    const table = document.getElementById('minerTable');
-    table.innerHTML = '';
-    content.forEach(item => {
-        const row = table.insertRow();
-        row.insertCell(0).textContent = item.code;
-        row.insertCell(1).textContent = item.name;
-        row.insertCell(2).textContent = item.price;
-        row.insertCell(3).innerHTML = '<button class="edit-button" onclick="editRow(this)">Edit</button> <button class="delete-button" onclick="deleteRow(this)">Delete</button>';
-    });
-    updateTotalPrice();
+    XLSX.writeFile(wb, 'miners_data.xlsx');
 }
 
 function sortTableByName() {
     const table = document.getElementById('minerTable');
     const rows = Array.from(table.rows);
+    rows.sort((a, b) => a.cells[1].textContent.localeCompare(b.cells[1].textContent));
 
-    rows.sort((a, b) => {
-        const nameA = a.cells[1].textContent.toUpperCase();
-        const nameB = b.cells[1].textContent.toUpperCase();
-        return nameA.localeCompare(nameB);
-    });
-
-    setTableContent(rows.map(row => ({
-        code: row.cells[0].textContent,
-        name: row.cells[1].textContent,
-        price: row.cells[2].textContent
-    })));
+    rows.forEach(row => table.appendChild(row));
 
     document.getElementById('sortName').style.display = 'none';
-    document.getElementById('unsortName').style.display = 'inline-block';
+    document.getElementById('unsortName').style.display = '';
 }
 
 function unsortTable() {
     setTableContent(originalTableContent);
-    document.getElementById('sortName').style.display = 'inline-block';
+    document.getElementById('sortName').style.display = '';
     document.getElementById('unsortName').style.display = 'none';
+}
+
+function getTableContent() {
+    const table = document.getElementById('minerTable');
+    const content = [];
+
+    for (let i = 0, row; row = table.rows[i]; i++) {
+        content.push({
+            code: row.cells[0].textContent,
+            name: row.cells[1].textContent,
+            price: row.cells[2].textContent
+        });
+    }
+
+    return content;
+}
+
+function setTableContent(content) {
+    const table = document.getElementById('minerTable');
+    table.innerHTML = '';
+
+    content.forEach(item => {
+        const row = table.insertRow();
+        const cell1 = row.insertCell(0);
+        const cell2 = row.insertCell(1);
+        const cell3 = row.insertCell(2);
+        const cell4 = row.insertCell(3);
+
+        cell1.textContent = item.code;
+        cell2.textContent = item.name;
+        cell3.textContent = item.price;
+        cell4.innerHTML = '<button class="edit-button" onclick="editRow(this)">Edit</button> <button class="delete-button" onclick="deleteRow(this)">Delete</button>';
+    });
+
+    updateTotalPrice();
 }

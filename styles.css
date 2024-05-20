@@ -172,6 +172,22 @@ td:nth-child(4) {
     width: 130px; /* Adjust the width as needed */
     max-width: 150px; /* Add max-width to ensure it doesn't exceed the specified width */
 }
+/* styles.css */
+.confetti-message {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2em;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    z-index: 1000;
+    text-align: center;
+}
+
 
 /* Media Queries for Mobile Responsiveness */
 @media (max-width: 768px) {
