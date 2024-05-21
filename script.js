@@ -1,5 +1,7 @@
 let selectedRow = null;
 let originalTableContent = [];
+let milestones = [5000, 10000, 20000, 50000, 100000];
+let lastMilestoneIndex = -1;
 
 document.getElementById('enter').addEventListener('click', addRow);
 document.getElementById('price').addEventListener('keypress', function(event) {
@@ -66,7 +68,6 @@ function addRow() {
         alert('Please fill in all fields.');
     }
 }
-
 function updateRow() {
     const code = document.getElementById('code').value;
     const name = document.getElementById('name').value;
@@ -129,6 +130,7 @@ function clearTable() {
     
     // Clear original table content from localStorage
     localStorage.removeItem('tableContent');
+    lastMilestoneIndex = -1; // Reset milestone tracking
 }
 
 function updateTotalPrice() {
@@ -146,58 +148,95 @@ function updateTotalPrice() {
 }
 
 function checkForMilestones(total) {
-    if (total >= 100000) { 
-        triggerConfetti(100000);
-    } 
-    else if (total >= 50000) {
-        triggerConfetti(50000);
-    }
-    else if (total >= 20000) {
-        triggerConfetti(20000);
-    }
-    else if (total >= 10000) {
-        triggerConfetti(10000);
-    } else if (total >= 5000) {
-        triggerConfetti(5000);
+    for (let i = lastMilestoneIndex + 1; i < milestones.length; i++) {
+        if (total >= milestones[i]) {
+            lastMilestoneIndex = i;
+            triggerConfetti(milestones[i]);
+        }
     }
 }
 
-function triggerConfetti(milestone, total) {
+function triggerConfetti(milestone) {
+    // Trigger confetti
     confetti({
         particleCount: 100,
         spread: 70,
         origin: { y: 0.6 }
     });
 
+    // Play Mario sound
+    playMarioSound();
+
+    // Show confetti message
     const messageContainer = document.getElementById('confetti-message');
     messageContainer.textContent = `Congratulations! You've reached a milestone: ₱ ${milestone.toFixed(2)}!`;
     messageContainer.style.display = 'block';
 
+    // Trigger balloons
+    triggerBalloons();
+
+    // Hide the message after 3 seconds
     setTimeout(() => {
         messageContainer.style.display = 'none';
-    }, 3000); // Hide the message after 5 seconds
+        document.getElementById('balloon-container').style.display = 'none';
+    }, 3000); // Hide the message after 3 seconds
+}
+
+function playMarioSound() {
+    const marioSound = document.getElementById('mario-sound');
+    marioSound.play();
+}
+
+function triggerBalloons() {
+    const balloonContainer = document.getElementById('balloon-container');
+    balloonContainer.innerHTML = ''; // Clear any existing balloons
+
+    // Create 10 balloons with different colors and positions
+    for (let i = 0; i < 10; i++) {
+        const balloon = document.createElement('div');
+        balloon.className = 'balloon';
+        balloon.style.setProperty('--balloon-color', getRandomColor());
+        balloon.style.left = `${Math.random() * 100}vw`;
+        balloon.style.animationDelay = `${Math.random() * 2}s`;
+        balloonContainer.appendChild(balloon);
+    }
+
+    balloonContainer.style.display = 'block';
+}
+
+function getRandomColor() {
+    const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'cyan', 'lime', 'magenta'];
+    return colors[Math.floor(Math.random() * colors.length)];
 }
 
 function downloadExcel() {
     const wb = XLSX.utils.book_new();
-    const ws_data = [['Code', 'Name', 'Price']];
+    const ws_data = [["Code", "Name of Miner", "Price"]];
+
     const table = document.getElementById('minerTable');
-    
     for (let i = 0, row; row = table.rows[i]; i++) {
-        const code = row.cells[0].textContent;
-        const name = row.cells[1].textContent;
-        const price = row.cells[2].textContent;
-        ws_data.push([code, name, price]);
+        const rowData = [
+            row.cells[0].textContent,
+            row.cells[1].textContent,
+            row.cells[2].textContent
+        ];
+        ws_data.push(rowData);
     }
 
     const ws = XLSX.utils.aoa_to_sheet(ws_data);
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'miners_data.xlsx');
+
+    // Generate file name with current date
+    const currentDate = new Date().toISOString().slice(0, 10); // Format: YYYY-MM-DD
+    const fileName = `HouseOfElle_miners_${currentDate}.xlsx`;
+
+    XLSX.writeFile(wb, fileName);
 }
 
 function sortTableByName() {
     const table = document.getElementById('minerTable');
     const rows = Array.from(table.rows);
+
     rows.sort((a, b) => a.cells[1].textContent.localeCompare(b.cells[1].textContent));
 
     rows.forEach(row => table.appendChild(row));
@@ -208,6 +247,7 @@ function sortTableByName() {
 
 function unsortTable() {
     setTableContent(originalTableContent);
+
     document.getElementById('sortName').style.display = '';
     document.getElementById('unsortName').style.display = 'none';
 }
@@ -217,11 +257,11 @@ function getTableContent() {
     const content = [];
 
     for (let i = 0, row; row = table.rows[i]; i++) {
-        content.push({
-            code: row.cells[0].textContent,
-            name: row.cells[1].textContent,
-            price: row.cells[2].textContent
-        });
+        content.push([
+            row.cells[0].textContent,
+            row.cells[1].textContent,
+            row.cells[2].textContent
+        ]);
     }
 
     return content;
@@ -231,17 +271,13 @@ function setTableContent(content) {
     const table = document.getElementById('minerTable');
     table.innerHTML = '';
 
-    content.forEach(item => {
+    content.forEach(rowData => {
         const row = table.insertRow();
-        const cell1 = row.insertCell(0);
-        const cell2 = row.insertCell(1);
-        const cell3 = row.insertCell(2);
-        const cell4 = row.insertCell(3);
 
-        cell1.textContent = item.code;
-        cell2.textContent = item.name;
-        cell3.textContent = item.price;
-        cell4.innerHTML = '<button class="edit-button" onclick="editRow(this)">Edit</button> <button class="delete-button" onclick="deleteRow(this)">Delete</button>';
+        row.insertCell(0).textContent = rowData[0];
+        row.insertCell(1).textContent = rowData[1];
+        row.insertCell(2).textContent = rowData[2];
+        row.insertCell(3).innerHTML = '<button class="edit-button" onclick="editRow(this)">Edit</button> <button class="delete-button" onclick="deleteRow(this)">Delete</button>';
     });
 
     updateTotalPrice();
