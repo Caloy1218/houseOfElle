@@ -172,6 +172,48 @@ td:nth-child(4) {
     width: 130px; /* Adjust the width as needed */
     max-width: 150px; /* Add max-width to ensure it doesn't exceed the specified width */
 }
+#balloon-container {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-50%);
+    z-index: 999;
+    pointer-events: none; /* Balloons should not interfere with other elements */
+}
+
+.balloon {
+    position: absolute;
+    bottom: -100px; /* Start below the visible area */
+    width: 90px;
+    height: 105px;
+    background-color: var(--balloon-color, red); /* Default color, can be overridden */
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; /* Make it look like a balloon */
+    animation: float 5s ease-in-out infinite;
+    pointer-events: none; /* Balloons should not interfere with other elements */
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-500px) rotate(10deg);
+    }
+    100% {
+        transform: translateY(-1000px) rotate(0deg);
+    }
+}
+
+.balloon::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    width: 2px;
+    height: 20px;
+    background-color: #000;
+}
 /* styles.css */
 .confetti-message {
     display: none;
@@ -179,14 +221,14 @@ td:nth-child(4) {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 2em;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: #4CAF50;
     color: white;
-    padding: 20px;
-    border-radius: 10px;
-    z-index: 1000;
-    text-align: center;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 1000; /* Ensure the message is on top of other elements */
 }
+
 
 
 /* Media Queries for Mobile Responsiveness */
