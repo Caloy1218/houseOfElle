@@ -237,6 +237,14 @@ function downloadExcel() {
     XLSX.writeFile(wb, fileName);
 }
 
+document.getElementById('undoButton').addEventListener('click', undoPage);
+
+function undoPage() {
+    clearTable();
+    setTableContent(originalTableContent);
+}
+
+
 document.getElementById('minerTable').addEventListener('click', function(event) {
     if (event.target.classList.contains('checkout-button')) {
         const row = event.target.closest('tr');
