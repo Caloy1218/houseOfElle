@@ -10,8 +10,15 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
+    
     <div class="container">
+
+
         <div class="input-section">
+            <div class="search-section">
+                <input type="text" id="searchInput" placeholder="Search Miner name...">
+                <button id="searchButton">Search</button>
+            </div>
             <label for="code">CODE</label>
             <input type="text" id="code">
             <label for="name">Name of Miner</label>
@@ -36,6 +43,7 @@
                         <span id="unsortName" class="sort-icon" style="display:none;">&#9660;</span> <!-- Down Arrow -->
                     </th>
                     <th>Price</th>
+                    <th>Checkout</th> <!-- New column for checkout buttons -->
                 </tr>
             </thead>
             <tbody id="minerTable"></tbody>
@@ -43,6 +51,7 @@
                 <tr>
                     <td colspan="2"><strong>Total</strong></td>
                     <td id="totalPrice">₱ 0.00</td>
+                    <td id="checkoutTotal">₱ 0.00</td> <!-- New row for checkout total -->
                 </tr>
             </tfoot>
         </table>
@@ -50,9 +59,11 @@
         <div id="balloon-container"></div>
         <div id="confetti-message" class="confetti-message"></div>
         <audio id="mario-sound" src="mario-bros.mp3"></audio>
-
+        <button id="dataBase">Coming Soon!</button>
         <button id="clearTable">Clear Table</button>
     </div>
+    <button id="scrollButton" class="scroll-button">&#9660;</button>
+
     <div id="confetti-message" class="confetti-message"></div> <!-- Added confetti message container -->
     <script src="script.js"></script>
 </body>

@@ -49,7 +49,7 @@ function addRow() {
         cell1.textContent = code;
         cell2.textContent = name;
         cell3.textContent = `₱ ${parseFloat(price).toFixed(2)}`;
-        cell4.innerHTML = '<button class="edit-button" onclick="editRow(this)">Edit</button> <button class="delete-button" onclick="deleteRow(this)">Delete</button>';
+        cell4.innerHTML = '<button class="edit-button" onclick="editRow(this)">Edit</button> <button class="delete-button" onclick="deleteRow(this)">Delete</button> <button class="checkout-button">Checkout</button>'; // Added checkout button
 
         // Clear input fields
         document.getElementById('code').value = '';
@@ -223,15 +223,41 @@ function downloadExcel() {
         ws_data.push(rowData);
     }
 
+    // Add total price and checkout total price to the data
+    ws_data.push(["Total Price", "", document.getElementById('totalPrice').textContent]);
+    ws_data.push(["Checkout Total", "", document.getElementById('checkoutTotal').textContent]);
+
     const ws = XLSX.utils.aoa_to_sheet(ws_data);
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
-    // Generate file name with current date
-    const currentDate = new Date().toISOString().slice(0, 10); // Format: YYYY-MM-DD
+    // Generate file name with current date in Filipino format (DD-MM-YYYY)
+    const currentDate = new Date().toLocaleDateString('en-PH').split('/').reverse().join('-');
     const fileName = `HouseOfElle_miners_${currentDate}.xlsx`;
 
     XLSX.writeFile(wb, fileName);
 }
+
+document.getElementById('minerTable').addEventListener('click', function(event) {
+    if (event.target.classList.contains('checkout-button')) {
+        const row = event.target.closest('tr');
+        const priceCell = row.cells[2].textContent.replace('₱', '').replace(',', '');
+        const totalPrice = parseFloat(document.getElementById('checkoutTotal').textContent.replace('₱', '')) || 0;
+        const newTotalPrice = totalPrice + parseFloat(priceCell);
+        document.getElementById('checkoutTotal').textContent = `₱ ${newTotalPrice.toFixed(2)}`;
+        
+        // Change background color to yellow
+        row.cells[1].style.backgroundColor = '#007bff';
+        row.cells[1].style.color = '#ffffff';
+        row.cells[0].style.backgroundColor = '#007bff';
+        row.cells[0].style.color = '#ffffff';
+        row.cells[2].style.backgroundColor = '#007bff';
+        row.cells[2].style.color = '#ffffff';
+    }
+});
+
+document.getElementById("dataBase").addEventListener("click", function() {
+    window.location.href = "dataBase.html";
+});
 
 function sortTableByName() {
     const table = document.getElementById('minerTable');
@@ -277,8 +303,108 @@ function setTableContent(content) {
         row.insertCell(0).textContent = rowData[0];
         row.insertCell(1).textContent = rowData[1];
         row.insertCell(2).textContent = rowData[2];
-        row.insertCell(3).innerHTML = '<button class="edit-button" onclick="editRow(this)">Edit</button> <button class="delete-button" onclick="deleteRow(this)">Delete</button>';
+        row.insertCell(3).innerHTML = '<button class="edit-button" onclick="editRow(this)">Edit</button> <button class="delete-button" onclick="deleteRow(this)">Delete</button> <button class="checkout-button">Checkout</button>'; // Add the "Checkout" button
+
+        // Check if this row was previously checked out
+        if (rowData[3] === 'checked') {
+            row.cells[1].classList.add('yellow-background'); // Add background color
+            row.cells[1].classList.add('white'); // Change text color
+        }
     });
 
     updateTotalPrice();
 }
+
+document.getElementById('searchButton').addEventListener('click', searchMiner);
+
+function searchMiner() {
+    const searchValue = document.getElementById('searchInput').value.toLowerCase();
+    const table = document.getElementById('minerTable');
+    let total = 0;
+    let found = false;
+
+    if (!searchValue.trim()) {
+        showToast("Please enter a miner's name.");
+        return;
+    }
+
+    for (let i = 0, row; row = table.rows[i]; i++) {
+        const minerName = row.cells[1].textContent.toLowerCase();
+        const priceCell = row.cells[2].textContent.replace('₱', '').replace(',', '');
+        
+        if (minerName.includes(searchValue)) {
+            row.style.display = '';
+            total += parseFloat(priceCell) || 0;
+            found = true;
+        } else {
+            row.style.display = 'none';
+        }
+    }
+
+    document.getElementById('totalPrice').textContent = `₱ ${total.toFixed(2)}`;
+
+    if (total > 0 && found) {
+        showToast(`Total price of ${searchValue}: ₱ ${total.toFixed(2)}`);
+    } else if (!found) {
+        showToast(`No miners found with the name: ${searchValue}`);
+    }
+}
+
+function showToast(message) {
+    const toastContainer = document.createElement('div');
+    toastContainer.classList.add('toast-container');
+    toastContainer.innerHTML = `
+        <div class="toast-message">${message}</div>
+        <button class="exit-button" onclick="exitToast()">X</button>
+    `;
+    document.body.appendChild(toastContainer);
+
+    setTimeout(() => {
+        toastContainer.classList.add('show');
+    }, 100);
+
+    setTimeout(() => {
+        exitToast();
+    }, 5000); // Close the toast after 5 seconds
+}
+
+function exitToast() {
+    const toastContainer = document.querySelector('.toast-container');
+    if (toastContainer) {
+        toastContainer.classList.remove('show');
+        setTimeout(() => {
+            toastContainer.remove();
+        }, 300); // Remove the toast container after the transition ends
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const scrollButton = document.getElementById('scrollButton');
+
+    // Function to toggle scroll button icon and scroll the page
+    function toggleScrollButton() {
+        if (document.documentElement.scrollTop > 0) {
+            scrollButton.innerHTML = '&#9650;'; // Change to up arrow
+        } else {
+            scrollButton.innerHTML = '&#9660;'; // Change to down arrow
+        }
+    }
+
+    // Event listener for scroll button click
+    scrollButton.addEventListener('click', function() {
+        if (document.documentElement.scrollTop > 0) {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        } else {
+            window.scrollTo({
+                top: document.documentElement.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+    });
+
+    // Event listener for scroll events
+    window.addEventListener('scroll', toggleScrollButton);
+});
