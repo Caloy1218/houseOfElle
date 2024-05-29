@@ -23,7 +23,32 @@ body {
     height: auto;
     margin: 50px 0;
 }
+.search-section {
+    display: flex;
+    justify-content: center;
+    gap:10px;
+}
 
+#searchInput {
+    padding: 10px;
+    font-size: .8em;
+}
+
+#searchButton {
+    margin-top:10px;
+    background-color: #ed297b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: .8em;
+}
+
+#searchButton:hover {
+    background-color: white;
+    color: #ed297b;
+    border: .5px solid #ed297b;
+}
 .input-section {
     margin-bottom: 40px;
 }
@@ -76,6 +101,42 @@ body {
     font-size: 1.2em;
 }
 
+.toast-container {
+    position: fixed;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: none;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    z-index: 9999; /* Ensure the toast is on top of other elements */
+}
+
+.toast-container.show {
+    display: block;
+}
+
+.toast-message {
+    display: inline-block;
+}
+
+.exit-button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1em;
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    width: 10px;
+    color:red;
+}
+
+
 #download {
     z-index: 1;
     border: none;
@@ -88,6 +149,20 @@ body {
     position: absolute;
     top: 20px;
     right: 40px;
+}
+
+#dataBase{
+    z-index: 2;
+    border: none;
+    width: 150px;
+    padding: 10px 0;
+    background-color: #ed297b;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    position: absolute;
+    top: 20px;
+    right: 360px;
 }
 
 #clearTable {
@@ -182,6 +257,7 @@ td:nth-child(4) {
     pointer-events: none; /* Balloons should not interfere with other elements */
 }
 
+
 .balloon {
     position: absolute;
     bottom: -100px; /* Start below the visible area */
@@ -203,6 +279,9 @@ td:nth-child(4) {
     100% {
         transform: translateY(-1000px) rotate(0deg);
     }
+}/* New style for background color change */
+.yellow-background {
+    background-color: yellow !important;
 }
 
 .balloon::after {
@@ -229,10 +308,49 @@ td:nth-child(4) {
     z-index: 1000; /* Ensure the message is on top of other elements */
 }
 
+.checkout-button {
+    padding: 8px 12px;
+    margin-right: 5px;
+    font-size: 14px;
+    background-color: #007bff; /* Change color to your preference */
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    width: 95%;
+    margin-top: 10px;
+}
 
+/* Hover effect for checkout button */
+.checkout-button:hover {
+    opacity: 0.8;
+}
+.scroll-button {
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    z-index: 999; /* Ensure it's above other elements */
+    background-color: #ed297b;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.scroll-button:hover {
+    background-color: #ff4081;
+}
 
 /* Media Queries for Mobile Responsiveness */
 @media (max-width: 768px) {
+    #dataBase{
+        display: none;
+    }
     .container {
         width: 95%;
         padding: 20px;
@@ -240,9 +358,14 @@ td:nth-child(4) {
         flex-direction: column;
         gap: 0px;
     }
-
+    .input-section{
+        margin-top: 40px;
+    }
+    .pre-price-buttons{
+        margin-bottom: 20px;
+    }
     .container #clearTable {
-        top: 430px;
+        top: 440px;
         width: 90%;
         left: 20px;
         background-color: #f44336;
