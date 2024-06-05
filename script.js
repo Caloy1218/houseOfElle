@@ -32,6 +32,7 @@ window.addEventListener('load', function() {
     }
 });
 
+
 function addRow() {
     const code = document.getElementById('code').value;
     const name = document.getElementById('name').value;
@@ -49,7 +50,7 @@ function addRow() {
         cell1.textContent = code;
         cell2.textContent = name;
         cell3.textContent = `₱ ${parseFloat(price).toFixed(2)}`;
-        cell4.innerHTML = '<button class="edit-button" onclick="editRow(this)">Edit</button> <button class="delete-button" onclick="deleteRow(this)">Delete</button> <button class="checkout-button">Checkout</button>'; // Added checkout button
+        cell4.innerHTML = '<button class="edit-button" onclick="editRow(this)">Edit</button> <button class="delete-button" onclick="deleteRow(this)">Delete</button> <button class="checkout-button">Checkout</button>';
 
         // Clear input fields
         document.getElementById('code').value = '';
@@ -58,6 +59,9 @@ function addRow() {
 
         document.getElementById('code').focus();
 
+        // Save data to database
+        saveToDatabase(code, name, price);
+        
         // Update total price
         updateTotalPrice();
         
@@ -68,6 +72,19 @@ function addRow() {
         alert('Please fill in all fields.');
     }
 }
+
+function saveToDatabase(code, name, price) {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "save_miner.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log(xhr.responseText);
+        }
+    };
+    xhr.send(`code=${code}&name=${name}&price=${price}`);
+}
+
 function updateRow() {
     const code = document.getElementById('code').value;
     const name = document.getElementById('name').value;
@@ -415,4 +432,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Event listener for scroll events
     window.addEventListener('scroll', toggleScrollButton);
+});
+document.addEventListener('DOMContentLoaded', (event) => {
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    logoutBtn.addEventListener('click', (event) => {
+        event.preventDefault();
+        window.location.href = 'SignupForm.html';
+    });
 });

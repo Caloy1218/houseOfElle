@@ -178,7 +178,33 @@ body {
     top: 20px;
     right: 200px;
 }
+#saveBtn {
+    z-index: 1;
+    border: none;
+    width: 60px;
+    padding: 10px 0;
+    background-color: #ed297b;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    position: absolute;
+    top: 20px;
+    right: 520px;
+}
 
+#logoutBtn{
+    z-index: 1;
+    border: none;
+    width: 80px;
+    padding: 10px 0;
+    background-color: #ed297b;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    position: absolute;
+    top: 20px;
+    right: 590px;
+}
 #enter:hover, #update:hover, #download:hover, #clearTable:hover {
     background-color: white;
     color: #ed297b;

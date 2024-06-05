@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Login and Sign Up Form</title>
+    <link rel="stylesheet" href="SignUp.css">
+    <script type="module" src="fireBaseAuth.js"></script>
+    <link rel="shortcut icon" href="./ellle.jpg" type="image/x-icon">
+</head>
+<body>
+
+<div class="container" id="login-form">
+    <h2>Login</h2>
+    <input type="email" id="login-email" placeholder="Email" required>
+    <input type="password" id="login-password" placeholder="Password" required>
+    <button id="logIn">Login</button>
+    <p>Don't have an account? <a href="#" id="show-signup">Sign Up</a></p>
+</div>
+
+<div class="container" id="signup-form" style="display: none;">
+    <h2>Sign Up</h2>
+    <input type="text" id="firstname" placeholder="First Name" required>
+    <input type="text" id="lastname" placeholder="Last Name" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="text" id="address" placeholder="Address" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button id="signUp">Sign Up</button>
+    <p>Already have an account? <a href="#" id="show-login">Login</a></p>
+</div>
+<script src="SignUpForm.js"></script>
+</body>
+</html>
