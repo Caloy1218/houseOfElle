@@ -43,7 +43,7 @@ document.getElementById('signUp').addEventListener('click', function() {
         return setDoc(docRef, userData);
     })
     .then(() => {
-        window.location.href = 'SignupForm.html';
+        window.location.href = 'index.html';
     })
     .catch((error) => {
         const errorCode = error.code;
@@ -63,7 +63,7 @@ logIn.addEventListener('click', (event) => {
         const user = userCredential.user;
         alert('Login Successful');
         localStorage.setItem('loginUserId', user.uid);
-        window.location.href = 'index.html';
+        window.location.href = 'SignupForm.html';
     })
     .catch((error) => {
         const errorCode = error.code;

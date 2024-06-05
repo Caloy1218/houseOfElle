@@ -3,70 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Miner Data Entry</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Gym Login and Sign Up Form</title>
+    <link rel="stylesheet" href="SignUp.css">
+    <script type="module" src="fireBaseAuth.js"></script>
     <link rel="shortcut icon" href="./ellle.jpg" type="image/x-icon">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
-    
-    <div class="container">
-        <div class="input-section">
-            <div class="search-section">
-                <input type="text" id="searchInput" placeholder="Search Miner name...">
-                <button id="searchButton">Search</button>
-                <button id="undoButton">&#8630;</button> <!-- Undo icon -->
-            </div>
-            <label for="code">CODE</label>
-            <input type="text" id="code">
-            <label for="name">Name of Miner</label>
-            <input type="text" id="name">
-            <label for="price">Price</label>
-            <input type="text" id="price">
-            <div class="pre-price-buttons">
-                <button class="pre-price" data-price="200">200</button>
-                <button class="pre-price" data-price="250">250</button>
-                <button class="pre-price" data-price="350">350</button>
-            </div>
-            <button id="enter">Enter</button>
-            <button id="update" style="display:none;">Update</button>
-        </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Code</th>
-                    <th>
-                        Name of Miner
-                        <span id="sortName" class="sort-icon">&#9650;</span> <!-- Up Arrow -->
-                        <span id="unsortName" class="sort-icon" style="display:none;">&#9660;</span> <!-- Down Arrow -->
-                    </th>
-                    <th>Price</th>
-                    <th>Checkout</th> <!-- New column for checkout buttons -->
-                </tr>
-            </thead>
-            <tbody id="minerTable"></tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="2"><strong>Total</strong></td>
-                    <td id="totalPrice">₱ 0.00</td>
-                    <td id="checkoutTotal">₱ 0.00</td> <!-- New row for checkout total -->
-                </tr>
-            </tfoot>
-        </table>
-        <button id="download">Download in Excel</button>
-        <div id="balloon-container"></div>
-        <div id="confetti-message" class="confetti-message"></div>
-        <audio id="mario-sound" src="mario-bros.mp3"></audio>
-        <button id="dataBase">Coming Soon!</button>
-        <button id="clearTable">Clear Table</button>
-        <button id="saveBtn">Save</button>
-        <button id="logoutBtn">Logout</button>
-    </div>
-    <button id="scrollButton" class="scroll-button">&#9660;</button>
 
-    <div id="confetti-message" class="confetti-message"></div> <!-- Added confetti message container -->
-    <script type="module" src="fireBaseDB.js"></script>
-    <script type="module" src="script.js"></script> 
+<div class="container" id="login-form">
+    <h2>Login</h2>
+    <input type="email" id="login-email" placeholder="Email" required>
+    <input type="password" id="login-password" placeholder="Password" required>
+    <button id="logIn">Login</button>
+    <p>Don't have an account? <a href="#" id="show-signup">Sign Up</a></p>
+</div>
+
+<div class="container" id="signup-form" style="display: none;">
+    <h2>Sign Up</h2>
+    <input type="text" id="firstname" placeholder="First Name" required>
+    <input type="text" id="lastname" placeholder="Last Name" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="text" id="address" placeholder="Address" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button id="signUp">Sign Up</button>
+    <p>Already have an account? <a href="#" id="show-login">Login</a></p>
+</div>
+<script src="SignUpForm.js"></script>
 </body>
 </html>

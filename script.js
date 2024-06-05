@@ -438,6 +438,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     logoutBtn.addEventListener('click', (event) => {
         event.preventDefault();
-        window.location.href = 'SignupForm.html';
+        window.location.href = 'index.html';
     });
 });
